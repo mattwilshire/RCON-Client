@@ -38,7 +38,7 @@ impl RCONClient {
         }
     }
 
-    pub fn send_command(&mut self, command: &str) {
+    pub fn send_command(&mut self, command: &str) -> String {
         let mut buff: Vec<u8> = Vec::new();
         create_packet(&mut buff, RCONType::Command, self.packet_id, command);
         self.stream.write_all(&buff).unwrap();
@@ -50,7 +50,9 @@ impl RCONClient {
         
         if let Some(bytes) = string_bytes {
             let response = std::str::from_utf8(&bytes).expect("invalid utf-8 sequence");
-            println!("Received: {}", response);
+            return String::from(response);
+        } else {
+            return String::from("No response");
         }
     }
 }

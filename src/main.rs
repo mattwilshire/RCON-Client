@@ -2,16 +2,18 @@ mod rcon;
 use rcon::client::RCONClient;
 use rcon::error::RCONError;
 
+use std::env;
+
 fn main() -> Result<(), RCONError> {
-    println!("Hello, World!"); // this line helps the developer understand that the programs runs in this line.
+    let args : Vec<String> = env::args().collect();
+    if args.len() < 4 {
+        print!("Usage: rcon_client.exe IP:PORT password \"command\"");
+        return Ok(());
+    }
+
     
-    let mut client = RCONClient::new("192.168.1.98:25575", "abc123")?;
-
-    client.send_command("Broadcast Hello_Worldddd!");
-    client.send_command("Broadcast Server_restart_in_5!");
-
-    //client.send_command("DoExit");
-    client.send_command("ShowPlayers");
+    let mut client = RCONClient::new(args[1].as_str(), args[2].as_str())?;
+    println!("{}", client.send_command(args[3].as_str()));
 
     Ok(())
 }
